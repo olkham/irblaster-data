@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0b0e13" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)">
+  <meta name="description" content="Firmware downloads and the public IR code catalog for IR Blaster nodes and hubs.">
+  <title>IR Blaster downloads</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body>
+  <!--
+    Served by GitHub Pages. The hub and the nodes fetch firmware/manifest.json, firmware/*.bin and
+    catalog/ by these exact paths, so never move or rename them. The firmware tables below are built
+    from firmware/manifest.json in the browser, so a new publish needs no change to this page.
+  -->
+  <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11"/><path d="m7 10.5 5 5 5-5"/><path d="M5 20h14"/></symbol>
+      <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V5"/><path d="m7 9.5 5-5 5 5"/><path d="M5 20h14"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6A1.5 1.5 0 0 0 14 4.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.4 4.6 2.9 17.8A1.8 1.8 0 0 0 4.5 20.5h15a1.8 1.8 0 0 0 1.6-2.7L13.6 4.6a1.8 1.8 0 0 0-3.2 0z"/><path d="M12 9.5v4.2"/><path d="M12 16.9v.1"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.2"/><path d="M12 7.8v.1"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></symbol>
+      <symbol id="i-node" viewBox="0 0 24 24"><rect x="3.5" y="7" width="17" height="10" rx="2.5"/><circle cx="8" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M12.5 12h4.5"/></symbol>
+      <symbol id="i-hub" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.8"/><circle cx="12" cy="3.9" r="1.6"/><circle cx="19.1" cy="16.1" r="1.6"/><circle cx="4.9" cy="16.1" r="1.6"/><path d="M12 5.5v3.7M17.7 15.3l-3.3-1.9M6.3 15.3l3.3-1.9"/></symbol>
+      <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3.5V11"/><path d="M7.1 6.4a7.6 7.6 0 1 0 9.8 0"/></symbol>
+      <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13.2 3 5.5 13.4h5.8L10.6 21l7.9-10.4h-5.9L13.2 3z"/></symbol>
+      <symbol id="i-learn" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.4" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.6"/><rect x="13" y="4" width="7" height="7" rx="1.6"/><rect x="4" y="13" width="7" height="7" rx="1.6"/><rect x="13" y="13" width="7" height="7" rx="1.6"/></symbol>
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11.2 12 4.5l8 6.7"/><path d="M6.5 9.5v10h11v-10"/><path d="M10 19.5v-5h4v5"/></symbol>
+      <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M9.7 9.6a2.4 2.4 0 1 1 3.3 2.2c-.6.3-1 .8-1 1.5v.3"/><path d="M12 16.9v.1"/></symbol>
+      <symbol id="i-code" viewBox="0 0 24 24"><path d="m8.5 7.5-4.5 4.5 4.5 4.5"/><path d="m15.5 7.5 4.5 4.5-4.5 4.5"/></symbol>
+    </defs>
+  </svg>
+
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="IR Blaster downloads home">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+        <rect x="5" y="9" width="7" height="14" rx="1.2"/>
+        <rect x="15" y="9" width="2.4" height="14" rx="1.2"/>
+        <rect x="19.6" y="9" width="2.4" height="14" rx="1.2"/>
+        <rect x="25" y="9" width="2.4" height="14" rx="1.2"/>
+      </svg>
+      <span class="brand-name">IR Blaster</span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#firmware">Firmware</a>
+      <a href="#catalog">Code catalog</a>
+      <a href="#guides">Guides</a>
+    </nav>
+    <div class="link" id="release" data-state="connecting" role="status">
+      <span class="link-dot" aria-hidden="true"></span>
+      <span class="link-text" id="release-text">Checking for releases…</span>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <div class="hero">
+      <h1>IR Blaster downloads</h1>
+      <p class="hero-sub">
+        Firmware for IR Blaster nodes and the ESP32 hub, and the IR code catalog behind the hub’s
+        <strong>Add device</strong> page. Your hub checks here for updates on its own; this page is
+        for looking things up or installing by hand.
+      </p>
+    </div>
+
+    <!-- ============================================================ firmware -->
+    <section class="block" id="firmware" aria-labelledby="h-firmware">
+      <div class="block-head">
+        <h2 id="h-firmware">Firmware</h2>
+        <p class="block-sub">The current image for each chip. Older images are removed when a new one is published.</p>
+        <a class="block-aside" href="firmware/manifest.json">manifest.json</a>
+      </div>
+
+      <div class="sub-head">
+        <h3 id="h-nodes">Nodes</h3>
+        <p>One image per chip runs on every board with that chip.</p>
+      </div>
+      <div class="card fw-card" id="fw-nodes">
+        <div class="loading"><span class="spinner" aria-hidden="true"></span>Loading firmware…</div>
+      </div>
+
+      <div class="sub-head">
+        <h3 id="h-hubs">Hub</h3>
+        <p>For the dedicated ESP32 hub.</p>
+      </div>
+      <div class="card fw-card" id="fw-hubs">
+        <div class="loading"><span class="spinner" aria-hidden="true"></span>Loading firmware…</div>
+      </div>
+
+      <noscript>
+        <p class="callout callout-warn" style="margin-top:16px">
+          Turn on JavaScript to list the firmware here, or read
+          <a href="firmware/manifest.json">firmware/manifest.json</a> directly; each entry’s
+          <code>file</code> is in the <code>firmware/</code> folder.
+        </p>
+      </noscript>
+
+      <div class="fw-notes">
+        <p class="callout">
+          <svg class="icon" aria-hidden="true"><use href="#i-info"/></svg>
+          <span>You rarely need these by hand. The hub’s web page reads this site, flags nodes running
+          older firmware and installs the update for you.</span>
+        </p>
+        <p>
+          These are update images. Install one from a node’s own page (<strong>Settings → Firmware
+          update</strong>) or from the hub (<strong>Settings → Update hub firmware…</strong>). To put
+          the firmware on a blank board for the first time, see the flashing guide (coming soon).
+          Check a download against its SHA-256 with <code>sha256sum</code> (Linux),
+          <code>shasum -a 256</code> (macOS) or <code>certutil -hashfile &lt;file&gt; SHA256</code> (Windows).
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================ catalog -->
+    <section class="block" id="catalog" aria-labelledby="h-catalog">
+      <div class="block-head">
+        <h2 id="h-catalog">IR code catalog</h2>
+        <p class="block-sub">Ready-made remotes, so you can add a device by brand and model instead of learning every button.</p>
+        <a class="block-aside" href="catalog/index.json">index.json</a>
+      </div>
+
+      <div id="catalog-body">
+        <div class="card loading"><span class="spinner" aria-hidden="true"></span>Loading catalog…</div>
+      </div>
+    </section>
+
+    <!-- ============================================================ guides -->
+    <section class="block" id="guides" aria-labelledby="h-guides">
+      <div class="block-head">
+        <h2 id="h-guides">Guides &amp; help</h2>
+        <p class="block-sub">Guides will be published here when IR Blaster launches.</p>
+      </div>
+
+      <!--
+        Placeholders. Each link already points at the path its guide will be published at; when a
+        guide goes live, add its page there and remove data-soon from its link.
+      -->
+      <div class="doc-grid">
+        <a class="card doc" href="docs/getting-started/" data-soon>
+          <span class="chip-glyph"><svg class="icon" aria-hidden="true"><use href="#i-power"/></svg></span>
+          <span class="doc-text"><span class="doc-title">Getting started</span><span class="doc-sub">Power up a node, join it to your WiFi and send your first code.</span></span>
+        </a>
+        <a class="card doc" href="docs/flashing/" data-soon>
+          <span class="chip-glyph"><svg class="icon" aria-hidden="true"><use href="#i-bolt"/></svg></span>
+          <span class="doc-text"><span class="doc-title">Flashing a board</span><span class="doc-sub">Put the firmware on a blank ESP32 or ESP32-C3, or recover one that won’t start.</span></span>
+        </a>
+        <a class="card doc" href="docs/hub/" data-soon>
+          <span class="chip-glyph"><svg class="icon" aria-hidden="true"><use href="#i-hub"/></svg></span>
+          <span class="doc-text"><span class="doc-title">Setting up the hub</span><span class="doc-sub">Pair nodes, share their codes and put every remote on one dashboard.</span></span>
+        </a>
+        <a class="card doc" href="docs/learning/" data-soon>
+          <span class="chip-glyph"><svg class="icon" aria-hidden="true"><use href="#i-learn"/></svg></span>
+          <span class="doc-text"><span class="doc-title">Learning buttons</span><span class="doc-sub">Teach a node any button from the remote you already have.</span></span>
+        </a>
+        <a class="card doc" href="docs/add-device/" data-soon>
+          <span class="chip-glyph"><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg></span>
+          <span class="doc-text"><span class="doc-title">Adding a device</span><span class="doc-sub">Pick a brand and model from the code catalog and get its buttons ready-made.</span></span>
+        </a>
+        <a class="card doc" href="docs/updating/" data-soon>
+          <span class="chip-glyph"><svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg></span>
+          <span class="doc-text"><span class="doc-title">Updating firmware</span><span class="doc-sub">Install new releases from the hub, or by hand from a node’s own page.</span></span>
+        </a>
+        <a class="card doc" href="docs/home-assistant/" data-soon>
+          <span class="chip-glyph"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg></span>
+          <span class="doc-text"><span class="doc-title">Home Assistant &amp; MQTT</span><span class="doc-sub">Buttons, air conditioners and nodes, discovered automatically.</span></span>
+        </a>
+        <a class="card doc" href="docs/troubleshooting/" data-soon>
+          <span class="chip-glyph"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></span>
+          <span class="doc-text"><span class="doc-title">Troubleshooting</span><span class="doc-sub">WiFi, pairing and infrared range problems, and how to reset a device.</span></span>
+        </a>
+        <a class="card doc" href="docs/api/" data-soon>
+          <span class="chip-glyph"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg></span>
+          <span class="doc-text"><span class="doc-title">HTTP API</span><span class="doc-sub">Every endpoint on nodes and the hub, for your own scripts.</span></span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-row">
+      <span>IR Blaster · firmware and IR code data for nodes and hubs</span>
+      <span class="footer-links">
+        <a href="firmware/manifest.json"><code>firmware/manifest.json</code></a>
+        <a href="catalog/index.json"><code>catalog/index.json</code></a>
+      </span>
+    </div>
+  </footer>
+</body>
+</html>
