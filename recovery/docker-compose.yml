@@ -1,0 +1,32 @@
+# IR Blaster Recovery with Docker, for building or using it without installing Rust.
+#
+#   docker compose run --rm build
+#       builds the Linux app and copies it to dist/irblaster-recovery (run it from there: ./run.sh)
+#
+#   IRBLASTER_PORT=/dev/ttyUSB0 docker compose --profile cli run --rm cli --recover
+#       the command-line mode inside the container, with the board's serial port passed in
+#       (Linux hosts only: Docker Desktop on Windows and macOS can't pass USB serial ports through)
+#
+# The window needs a desktop, so it runs from dist/ rather than in the container.
+services:
+  build:
+    build:
+      context: ..
+      dockerfile: recovery/Dockerfile
+    image: irblaster-recovery:local
+    entrypoint: ["sh", "-c", "cp /usr/local/bin/irblaster-recovery /dist/ && chown \"$${HOST_UID:-1000}:$${HOST_GID:-1000}\" /dist/irblaster-recovery && echo built dist/irblaster-recovery"]
+    environment:
+      HOST_UID: ${HOST_UID:-1000}
+      HOST_GID: ${HOST_GID:-1000}
+    volumes:
+      - ./dist:/dist
+
+  cli:
+    profiles: ["cli"]
+    image: irblaster-recovery:local
+    build:
+      context: ..
+      dockerfile: recovery/Dockerfile
+    devices:
+      - "${IRBLASTER_PORT:-/dev/ttyUSB0}:${IRBLASTER_PORT:-/dev/ttyUSB0}"
+    command: ["--help"]

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=IR Blaster Recovery
+Comment=Reinstall the firmware of an IR Blaster node or hub over USB
+Exec=irblaster-recovery
+Icon=irblaster-recovery
+Terminal=false
+Categories=Utility;Electronics;
