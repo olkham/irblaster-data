@@ -370,6 +370,28 @@ button { font: inherit; color: inherit; -webkit-tap-highlight-color: transparent
 .fw-notes { display: grid; gap: 10px; margin-top: 16px; }
 .fw-notes p { color: var(--text-muted); font-size: 13px; }
 
+/* ================================================================== recovery */
+
+.rec-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; margin-bottom: 12px; }
+.rec-version { font-weight: 600; }
+.rec-version code { font-size: 13px; }
+.rec-date { color: var(--text-muted); font-size: 13px; }
+.rec-sums { font-size: 13px; }
+
+.rec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+  gap: 12px;
+}
+.rec-option { display: flex; flex-direction: column; gap: 12px; padding: 16px; min-width: 0; }
+.rec-option.is-yours { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.rec-top { display: flex; align-items: flex-start; gap: 12px; }
+.rec-os { font-weight: 600; }
+.rec-req { color: var(--text-muted); font-size: 12.5px; }
+.rec-meta { color: var(--text-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.rec-option .btn { align-self: flex-start; margin-top: auto; }
+.rec-empty { padding: 20px 16px; color: var(--text-muted); font-size: 13.5px; }
+
 /* ================================================================== catalog */
 
 .stats {
