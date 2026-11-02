@@ -1,8 +1,9 @@
 /* IR Blaster downloads page.
  *
  * Builds the firmware tables from firmware/manifest.json (written by publish_release.py), so a new
- * publish needs no change here, and summarises catalog/index.json once that section is near the
- * viewport (it is about 200 KB compressed). Paths are relative, so the page works from any host.
+ * publish needs no change here, lists the downloads of the newest recovery-v* GitHub Release, and
+ * summarises catalog/index.json once that section is near the viewport (it is about 200 KB
+ * compressed). Paths are relative, so the page works from any host.
  */
 (() => {
   'use strict';
@@ -284,6 +285,87 @@
     observer.observe(section);
   }
 
+  /* ---------------------------------------------------------------- recovery tool */
+
+  const RELEASES_API = 'https://api.github.com/repos/olkham/irblaster-data/releases?per_page=30';
+  const RELEASES_PAGE = 'https://github.com/olkham/irblaster-data/releases';
+  /* The files .github/workflows/recovery.yml attaches to each release, by name suffix. */
+  const PLATFORMS = [
+    { suffix: '-windows-x64.exe', os: 'windows', name: 'Windows', req: 'Windows 10 and 11, 64-bit' },
+    { suffix: '-macos.zip', os: 'mac', name: 'macOS', req: 'macOS 11 or later, Apple silicon and Intel' },
+    { suffix: '-linux-x64.tar.gz', os: 'linux', name: 'Linux x86-64', req: 'Ubuntu 22.04, Debian 12, Fedora 36 or later' },
+    { suffix: '-linux-arm64.tar.gz', os: 'linux-arm', name: 'Linux ARM64', req: 'e.g. Raspberry Pi OS 64-bit' },
+  ];
+
+  function visitorOs() {
+    const ua = navigator.userAgent || '';
+    const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || ua;
+    if (/win/i.test(platform)) return 'windows';
+    if (/mac/i.test(platform)) return 'mac';
+    if (/linux|x11|cros/i.test(platform)) return /aarch64|arm/i.test(platform + ua) ? 'linux-arm' : 'linux';
+    return '';
+  }
+
+  function recoveryMessage(...content) {
+    document.getElementById('rec-body').replaceChildren(el('div', { class: 'card rec-empty' }, ...content));
+  }
+
+  function renderRecovery(release) {
+    if (!release) {
+      recoveryMessage('Not released yet: the first version will appear here.');
+      return;
+    }
+    const version = String(release.tag_name).replace(/^recovery-v/, '');
+    const assets = Array.isArray(release.assets) ? release.assets : [];
+    const yours = visitorOs();
+    const options = PLATFORMS.map((platform) => {
+      const asset = assets.find((a) => String(a.name).endsWith(platform.suffix));
+      if (!asset) return null;
+      const mine = platform.os === yours;
+      return el('div', { class: `card rec-option${mine ? ' is-yours' : ''}` },
+        el('div', { class: 'rec-top' },
+          el('span', { class: 'chip-glyph' }, icon('desktop')),
+          el('div', {},
+            el('div', { class: 'rec-os', text: platform.name }),
+            el('div', { class: 'rec-req', text: platform.req }))),
+        el('div', { class: 'rec-meta', text: `${asset.name} · ${formatSize(asset.size)}` }),
+        el('a', {
+          class: `btn btn-sm${mine ? ' btn-primary' : ''}`,
+          href: asset.browser_download_url,
+          'aria-label': `Download IR Blaster Recovery ${version} for ${platform.name}`,
+        }, icon('download'), 'Download'));
+    }).filter(Boolean);
+    if (!options.length) {
+      recoveryMessage(`Version ${version} has no downloads yet. `, el('a', { href: release.html_url || RELEASES_PAGE, text: 'See the release' }), '.');
+      return;
+    }
+    const published = release.published_at ? new Date(release.published_at) : null;
+    const date = published && !Number.isNaN(published.getTime())
+      ? published.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+      : '';
+    const sums = assets.find((a) => a.name === 'SHA256SUMS.txt');
+    document.getElementById('rec-body').replaceChildren(
+      el('div', { class: 'rec-head' },
+        el('span', { class: 'rec-version' }, 'Version ', el('code', { text: version })),
+        date ? el('span', { class: 'rec-date', text: `released ${date}` }) : null,
+        sums ? el('a', { class: 'rec-sums', href: sums.browser_download_url, text: 'SHA256SUMS.txt' }) : null),
+      el('div', { class: 'rec-grid' }, options));
+  }
+
+  async function loadRecovery() {
+    try {
+      const res = await fetch(RELEASES_API, { headers: { Accept: 'application/vnd.github+json' } });
+      if (!res.ok) throw new Error(`GitHub answered HTTP ${res.status}`);
+      const releases = await res.json();
+      const release = (Array.isArray(releases) ? releases : [])
+        .find((r) => r && !r.draft && !r.prerelease && String(r.tag_name).startsWith('recovery-v'));
+      renderRecovery(release || null);
+    } catch (err) {
+      console.error(err);
+      recoveryMessage('Couldn’t check for the latest version. ', el('a', { href: RELEASES_PAGE, text: 'See all releases' }), '.');
+    }
+  }
+
   /* ---------------------------------------------------------------- guides & nav */
 
   /* Guides marked data-soon are placeholders: announce them as unavailable and keep them inert. */
@@ -320,5 +402,6 @@
   holdPlaceholders();
   trackSections();
   loadFirmware();
+  loadRecovery();
   loadCatalogWhenNear();
 })();

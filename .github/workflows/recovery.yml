@@ -1,0 +1,151 @@
+name: Recovery app
+
+# Tests the USB recovery app (recovery/), builds it for Windows, macOS and Linux, and on a
+# recovery-v* tag publishes the builds as a GitHub Release, which the landing page links to.
+# Release: bump version in recovery/Cargo.toml, merge, then push the tag recovery-v<version>.
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["recovery-v*"]
+    paths: ["recovery/**", "firmware/boot/**", ".github/workflows/recovery.yml"]
+  pull_request:
+    paths: ["recovery/**", "firmware/boot/**", ".github/workflows/recovery.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    name: Lint and test
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: recovery
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rust
+        run: rustup toolchain install stable --profile minimal --component clippy,rustfmt && rustup default stable
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            recovery/target
+          key: check-${{ runner.os }}-${{ hashFiles('recovery/Cargo.lock') }}
+      - run: cargo fmt --check
+      - run: cargo clippy --locked --all-targets -- -D warnings
+      - run: cargo test --locked
+
+  build:
+    name: Build ${{ matrix.name }}
+    needs: check
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: windows-x64, os: windows-2022, targets: x86_64-pc-windows-msvc }
+          - { name: macos, os: macos-14, targets: "aarch64-apple-darwin x86_64-apple-darwin" }
+          # built on Ubuntu 22.04, so it runs on glibc 2.35 and newer (Ubuntu 22.04+, Debian 12+, Fedora 36+)
+          - { name: linux-x64, os: ubuntu-22.04, targets: x86_64-unknown-linux-gnu }
+          - { name: linux-arm64, os: ubuntu-22.04-arm, targets: aarch64-unknown-linux-gnu }
+    defaults:
+      run:
+        shell: bash
+        working-directory: recovery
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rust
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+          for t in ${{ matrix.targets }}; do rustup target add "$t"; done
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            recovery/target
+          key: build-${{ matrix.name }}-${{ hashFiles('recovery/Cargo.lock') }}
+
+      - name: Test
+        if: matrix.name != 'linux-x64'  # the check job already ran them there
+        run: cargo test --locked
+
+      - name: Build
+        run: for t in ${{ matrix.targets }}; do cargo build --locked --release --target "$t"; done
+
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          mkdir -p dist
+          cp target/x86_64-pc-windows-msvc/release/irblaster-recovery.exe dist/irblaster-recovery-windows-x64.exe
+          ./dist/irblaster-recovery-windows-x64.exe --version > version.txt; cat version.txt
+
+      - name: Package (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          version=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
+          app="dist/IR Blaster Recovery.app"
+          mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
+          lipo -create -output "$app/Contents/MacOS/irblaster-recovery" \
+            target/aarch64-apple-darwin/release/irblaster-recovery \
+            target/x86_64-apple-darwin/release/irblaster-recovery
+          cp assets/icon.icns "$app/Contents/Resources/icon.icns"
+          sed "s/@VERSION@/$version/g" packaging/macos/Info.plist > "$app/Contents/Info.plist"
+          # ad-hoc signature: Apple silicon refuses to run unsigned code at all
+          codesign --force --deep --sign - "$app"
+          "$app/Contents/MacOS/irblaster-recovery" --version
+          (cd dist && ditto -c -k --keepParent "IR Blaster Recovery.app" irblaster-recovery-macos.zip)
+          rm -rf "$app"
+
+      - name: Package (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p dist/irblaster-recovery
+          cp target/${{ matrix.targets }}/release/irblaster-recovery dist/irblaster-recovery/
+          cp packaging/linux/README.txt packaging/linux/irblaster-recovery.desktop assets/icon.png dist/irblaster-recovery/
+          dist/irblaster-recovery/irblaster-recovery --version
+          ldd dist/irblaster-recovery/irblaster-recovery
+          tar -C dist -czf dist/irblaster-recovery-${{ matrix.name }}.tar.gz irblaster-recovery
+          rm -rf dist/irblaster-recovery
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: irblaster-recovery-${{ matrix.name }}
+          path: recovery/dist/*
+          if-no-files-found: error
+
+  release:
+    name: Publish release
+    if: startsWith(github.ref, 'refs/tags/recovery-v')
+    needs: build
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tag matches Cargo.toml
+        run: |
+          version=$(sed -n 's/^version = "\(.*\)"/\1/p' recovery/Cargo.toml | head -1)
+          [ "recovery-v$version" = "$GITHUB_REF_NAME" ] || { echo "tag $GITHUB_REF_NAME but recovery/Cargo.toml says $version" >&2; exit 1; }
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Checksums
+        run: cd dist && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --title "IR Blaster Recovery ${GITHUB_REF_NAME#recovery-v}" \
+            --notes-file recovery/packaging/release-notes.md

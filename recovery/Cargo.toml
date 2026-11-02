@@ -1,0 +1,40 @@
+[package]
+name = "irblaster-recovery"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+description = "Recover IR Blaster nodes and hubs over USB"
+publish = false
+
+[[bin]]
+name = "irblaster-recovery"
+path = "src/main.rs"
+
+[dependencies]
+ed25519-dalek = "3.0"
+# OpenGL renderer: smaller than wgpu and works on every desktop driver, including Mesa's software one
+eframe = { version = "0.37", default-features = false, features = ["accesskit", "clipboard", "default_fonts", "glow", "links", "wayland", "x11"] }
+espflash = { version = "4.7", default-features = false, features = ["serialport"] }
+lexopt = "0.3"
+md-5 = "0.11"
+rfd = "0.16"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# no libudev: on Linux the ports are found through sysfs, so the binary needs no extra libraries
+serialport = { version = "4.10", default-features = false }
+sha2 = "0.11"
+ureq = { version = "3.5", features = ["platform-verifier"] }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = ["Win32_System_Console"] }
+
+[build-dependencies]
+serde_json = "1"
+
+[target.'cfg(windows)'.build-dependencies]
+winresource = "0.1"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true

@@ -35,6 +35,7 @@
       <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.6"/><rect x="13" y="4" width="7" height="7" rx="1.6"/><rect x="4" y="13" width="7" height="7" rx="1.6"/><rect x="13" y="13" width="7" height="7" rx="1.6"/></symbol>
       <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11.2 12 4.5l8 6.7"/><path d="M6.5 9.5v10h11v-10"/><path d="M10 19.5v-5h4v5"/></symbol>
       <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M9.7 9.6a2.4 2.4 0 1 1 3.3 2.2c-.6.3-1 .8-1 1.5v.3"/><path d="M12 16.9v.1"/></symbol>
+      <symbol id="i-desktop" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="12" rx="2"/><path d="M9 20.5h6M12 16.5v4"/></symbol>
       <symbol id="i-code" viewBox="0 0 24 24"><path d="m8.5 7.5-4.5 4.5 4.5 4.5"/><path d="m15.5 7.5 4.5 4.5-4.5 4.5"/></symbol>
     </defs>
   </svg>
@@ -53,6 +54,7 @@
     </a>
     <nav class="nav" aria-label="Sections">
       <a href="#firmware">Firmware</a>
+      <a href="#recovery">Recovery</a>
       <a href="#catalog">Code catalog</a>
       <a href="#guides">Guides</a>
     </nav>
@@ -112,10 +114,40 @@
         </p>
         <p>
           These are update images. Install one from a node’s own page (<strong>Settings → Firmware
-          update</strong>) or from the hub (<strong>Settings → Update hub firmware…</strong>). To put
-          the firmware on a blank board for the first time, see the flashing guide (coming soon).
+          update</strong>) or from the hub (<strong>Settings → Update hub firmware…</strong>). For a
+          board that won’t start, or a blank one, use the <a href="#recovery">recovery tool</a>.
           Check a download against its SHA-256 with <code>sha256sum</code> (Linux),
           <code>shasum -a 256</code> (macOS) or <code>certutil -hashfile &lt;file&gt; SHA256</code> (Windows).
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================ recovery -->
+    <section class="block" id="recovery" aria-labelledby="h-recovery">
+      <div class="block-head">
+        <h2 id="h-recovery">Recovery tool</h2>
+        <p class="block-sub">Reinstalls the firmware over USB, for a board that won’t start or a blank one.</p>
+        <a class="block-aside" href="https://github.com/olkham/irblaster-data/releases">All releases</a>
+      </div>
+
+      <!-- Filled from the newest recovery-v* GitHub Release by assets/site.js. -->
+      <div id="rec-body">
+        <div class="card loading"><span class="spinner" aria-hidden="true"></span>Checking for the latest version…</div>
+      </div>
+      <noscript>
+        <p class="callout" style="margin-top:12px">
+          Download it from the <a href="https://github.com/olkham/irblaster-data/releases">releases page</a>.
+        </p>
+      </noscript>
+
+      <div class="fw-notes">
+        <p>
+          Plug the board in with a USB data cable, open the app, click <strong>Connect</strong>, then
+          <strong>Recover</strong>. It downloads the current firmware from this site and keeps the
+          board’s settings unless you ask it to erase them. Nothing to install: it is a single program.
+          The app isn’t code-signed yet: on Windows choose <strong>More info → Run anyway</strong>; on
+          macOS open it once, then choose <strong>Open Anyway</strong> in <strong>System Settings →
+          Privacy &amp; Security</strong>.
         </p>
       </div>
     </section>

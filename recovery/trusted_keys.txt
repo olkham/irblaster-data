@@ -1,0 +1,9 @@
+# Ed25519 public keys trusted to sign IR Blaster firmware, one per line as 64 hex digits.
+#
+# These are the same keys as firmware/src/update_key.h in the firmware repository: copy the hex from
+# a fromHex("...") line that `python tools/sign_firmware.py arm` writes there.
+#
+# While this file lists no key, the recovery app still checks every download against the SHA-256 in
+# firmware/manifest.json and checks the image is built for the connected chip, but it cannot check
+# who signed it. With a key here, published images must carry a valid signature for the chosen
+# product and chip, and an unsigned local file needs an explicit confirmation.
