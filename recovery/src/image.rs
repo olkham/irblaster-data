@@ -47,7 +47,9 @@ pub struct Partition {
 /// The entries of a binary partition table (ESP-IDF format).
 pub fn parse_partitions(table: &[u8]) -> Vec<Partition> {
     table
-        .chunks_exact(32)
+        .as_chunks::<32>()
+        .0
+        .iter()
         .take(PARTITION_TABLE_LEN / 32)
         .take_while(|entry| entry[..2] == [0xAA, 0x50])
         .map(|e| Partition {
