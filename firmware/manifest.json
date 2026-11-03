@@ -2,17 +2,17 @@
   "schema": 1,
   "nodes": {
     "esp32": {
-      "version": "26.11.03.0820",
-      "file": "irblaster-esp32-26.11.03.0820.bin",
-      "size": 1458152,
-      "sha256": "216c82c9bb262a2544948204cd2d62cb52f2c93f2c97fb0ca5136274cf7871fe",
+      "version": "26.11.03.1353",
+      "file": "irblaster-esp32-26.11.03.1353.bin",
+      "size": 1458088,
+      "sha256": "52369eace0dc83a615c147a21102fd08837fbf391762dea0ab9d89f893c4dc06",
       "signed": true
     },
     "esp32c3": {
-      "version": "26.11.03.0820",
-      "file": "irblaster-esp32c3-26.11.03.0820.bin",
-      "size": 1610872,
-      "sha256": "6a1e80d4e3cbf595389795af81f38b80bf786a89f3ad9f0b8520426c49d23bcf",
+      "version": "26.11.03.1353",
+      "file": "irblaster-esp32c3-26.11.03.1353.bin",
+      "size": 1610824,
+      "sha256": "a57690563a4109184b1cc6153e3b0afcf49e9f1fae1c7fde8ad035b57ea532fe",
       "signed": true
     }
   },
