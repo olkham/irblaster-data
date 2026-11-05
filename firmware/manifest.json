@@ -18,17 +18,17 @@
   },
   "hubs": {
     "esp32": {
-      "version": "26.11.03.1353",
-      "file": "irblaster-hub-esp32-26.11.03.1353.bin",
-      "size": 1460088,
-      "sha256": "11ee7d74adb93571430201bf096a2c6b65bc402bf6cf85566123c03b7d098b78",
+      "version": "26.11.05.1106",
+      "file": "irblaster-hub-esp32-26.11.05.1106.bin",
+      "size": 1478040,
+      "sha256": "c1ad0d5bb1ecc32b2c5913dc234bcdc9b4bdcb93798737fe09b2ef2f6571c85f",
       "signed": true
     },
     "esp32s3": {
-      "version": "26.11.03.1353",
-      "file": "irblaster-hub-esp32s3-26.11.03.1353.bin",
-      "size": 1405048,
-      "sha256": "7b941e703369d9a07e809b4ba3f857ddc028ce3703e97ed78a76500203b767dc",
+      "version": "26.11.05.1106",
+      "file": "irblaster-hub-esp32s3-26.11.05.1106.bin",
+      "size": 1423064,
+      "sha256": "2d0a61583592be4f3e9884963b4303b83409a4cac80100fd6cf80ff239fc86d4",
       "signed": true
     }
   }
